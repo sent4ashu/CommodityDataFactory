@@ -1,0 +1,62 @@
+{
+	"name": "CommodityRead",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CommoditySink",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"LastDay": {
+				"type": "int",
+				"defaultValue": 5
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureDataLakeStoreLocation",
+				"folderPath": {
+					"value": "@concat('CommodityData/commodityrawdata/', formatDateTime(adddays(utcnow(),mul(dataset().LastDay, -1)), 'yyyy/MM/dd'))",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

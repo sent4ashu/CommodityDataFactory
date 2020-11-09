@@ -1,0 +1,32 @@
+{
+	"name": "FiveDaysMovingAverage",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "CommodityRead",
+						"type": "DatasetReference"
+					},
+					"name": "CommodityData"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "CommodityWriteDS",
+						"type": "DatasetReference"
+					},
+					"name": "CommodityWrite"
+				}
+			],
+			"transformations": [
+				{
+					"name": "FiveDaysAVG"
+				}
+			],
+			"script": "source(output(\n\t\tColumn_1 as string,\n\t\tColumn_2 as string,\n\t\tColumn_3 as string,\n\t\tColumn_4 as string,\n\t\tColumn_5 as string,\n\t\tColumn_6 as string,\n\t\tColumn_7 as string,\n\t\tColumn_8 as string,\n\t\tColumn_9 as string,\n\t\tColumn_10 as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['CommodityData/commodityrawdata/**/*.csv']) ~> CommodityData\nCommodityData aggregate(groupBy(Column_5),\n\tColumn_10 = sum(toDecimal(Column_10))) ~> FiveDaysAVG\nFiveDaysAVG sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['fivedaysMovingAvg.csv'],\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> CommodityWrite"
+		}
+	}
+}

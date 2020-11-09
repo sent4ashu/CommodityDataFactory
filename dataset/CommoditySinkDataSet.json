@@ -1,0 +1,27 @@
+{
+	"name": "CommoditySinkDataSet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CommoditySink",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureDataLakeStoreLocation",
+				"fileName": {
+					"value": "@concat('commodityrawdata/',formatDateTime(utcnow(),'yyyy'),'/',formatDateTime(utcnow(),'MM'),'/',formatDateTime(utcnow(),'dd'),'/',formatDateTime(utcnow(),'HH'),formatDateTime(utcnow(),'mm'),'.csv')",
+					"type": "Expression"
+				},
+				"folderPath": "CommodityData"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

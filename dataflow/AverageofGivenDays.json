@@ -1,0 +1,32 @@
+{
+	"name": "AverageofGivenDays",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "OutputRead",
+						"type": "DatasetReference"
+					},
+					"name": "CommodityData"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AverageWrite",
+						"type": "DatasetReference"
+					},
+					"name": "WriteData"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Average"
+				}
+			],
+			"script": "source(output(\n\t\tColumn_1 as string,\n\t\tColumn_2 as string,\n\t\tColumn_3 as string,\n\t\tColumn_4 as string,\n\t\tColumn_5 as string,\n\t\tColumn_6 as string,\n\t\tColumn_7 as string,\n\t\tColumn_8 as string,\n\t\tColumn_9 as string,\n\t\tColumn_10 as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: true,\n\twildcardPaths:['**/*.csv']) ~> CommodityData\nCommodityData aggregate(groupBy(Column_2,\n\t\tColumn_3,\n\t\tColumn_4,\n\t\tColumn_5),\n\tMin_Price = min(toDecimal(Column_8)),\n\t\tMax_Price = max(toDecimal(Column_9)),\n\t\tAvg_Price = avg(toDecimal(Column_8))) ~> Average\nAverage sink(input(\n\t\tColumn_1 as string,\n\t\tColumn_2 as string,\n\t\tColumn_3 as string,\n\t\tColumn_4 as string,\n\t\tColumn_5 as string,\n\t\tColumn_6 as string,\n\t\tColumn_7 as string,\n\t\tColumn_8 as string,\n\t\tColumn_9 as string,\n\t\tColumn_10 as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Average.csv'],\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> WriteData"
+		}
+	}
+}

@@ -1,0 +1,31 @@
+{
+	"name": "CommodityWriteDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CommoditySink",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"LastDayW": {
+				"type": "int",
+				"defaultValue": 5
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureDataLakeStoreLocation",
+				"folderPath": {
+					"value": "@concat('CommodityData/Output/', formatDateTime(adddays(utcnow(),mul(dataset().LastDayW, -1)), 'yyyy/MM/dd'))",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
